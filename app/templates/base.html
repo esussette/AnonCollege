@@ -4,6 +4,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    {%  if title %}
+    <title>{{ title }} - Title</title>
+    {% else %}
     <title>Title</title>
 </head>
 <body>
@@ -17,7 +21,13 @@
 
 {% block navbar %}
 <div class="navbar navbar-fixed-top">
-  <!-- ... -->
+    {% if current_user.is_anonymous %}
+    <li><a href="{{ url_for('login') }}">Register/Login</a></li>
+    {% else %}
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    <li><a href="{{ url_for('topics') }}">Topics</a></li>
+    {% endif %}
+
 </div>
 {% endblock %}
 
