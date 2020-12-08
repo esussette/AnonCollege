@@ -11,9 +11,7 @@ from app.models import User
 @app.route('/')
 @app.route('/home')
 def homepage():
-    title = {'title': 'Welcome to AnonCollege!'}
-    body = {'body': 'Discover what is happening at Ithaca College!  '}
-    return render_template('base.html', title='home', user=title, body=body)
+    return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
