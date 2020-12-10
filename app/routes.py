@@ -3,8 +3,8 @@ from flask_login import login_user, logout_user
 from sqlalchemy.sql.functions import random, current_user
 from werkzeug.urls import url_parse
 
-from app import app
-from app.forms import LoginForm, RegistrationForm
+from app import app, db
+from app.forms import LoginForm, RegistrationForm, NewPostForm
 from app.models import User
 
 
@@ -12,6 +12,23 @@ from app.models import User
 @app.route('/home')
 def homepage():
     return render_template('index.html')
+
+
+@app.route('/category')
+def category():
+    return render_template('category.html')
+
+
+@app.route('/createPost')
+def createPost():
+    form = NewPostForm()
+    if form.validate_on_submit():
+        flash('New post for category {}'.format(form.Artist.data))
+        my_post = NewPostForm(title=form.title.data, description=form.description.data)
+        db.session.add(my_post)
+        db.session.commit()
+        return redirect(url_for('category'))
+    return render_template('createPost.html', title='New artists', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
