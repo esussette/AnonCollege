@@ -33,5 +33,6 @@ class RegistrationForm(FlaskForm):
 
 class NewPostForm(FlaskForm):
     title = StringField('title', validators=[DataRequired()])
-    description = StringField('description', validators=[DataRequired()])
+    category = StringField('category', validators=[DataRequired()])
+    body = StringField('description', validators=[DataRequired()])
     submit = SubmitField('Create New Post')

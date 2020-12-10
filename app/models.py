@@ -1,7 +1,9 @@
 from datetime import datetime
 
-from flask_login import login_manager, UserMixin
+from flask import url_for
+from flask_login import login_manager, UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import redirect
 
 from app import db, login
 
@@ -22,6 +24,7 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -29,9 +32,13 @@ def load_user(id):
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String(64))
+    title = db.Column(db.String(64))
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+
+
