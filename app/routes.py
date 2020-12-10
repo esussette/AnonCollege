@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user
-from sqlalchemy.sql.functions import random, current_user
+from sqlalchemy.sql.functions import random
 from werkzeug.urls import url_parse
 
 from app import app, db
@@ -9,7 +9,7 @@ from app.models import User
 
 
 @app.route('/')
-@app.route('/home')
+@app.route('/home', methods=['GET', 'POST'])
 def homepage():
     return render_template('index.html')
 
@@ -28,7 +28,7 @@ def createPost():
         db.session.add(my_post)
         db.session.commit()
         return redirect(url_for('category'))
-    return render_template('createPost.html', title='New artists', form=form)
+    return render_template('createPost.html', title='New post', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
