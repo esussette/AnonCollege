@@ -118,7 +118,7 @@ def reset_db():
     p1 = Post(category='Park', title='Park Sucks', author=u1, body='i hate this school, sos',
               timestamp=now + timedelta(seconds=1))
     p2 = Post(category='CHS', title='Where is the bathroom', author=u2, body='ive walked around for half of class, '
-                                                                             'its a miracle i havent peed on myself',
+                                                                             'please help',
               timestamp=now + timedelta(seconds=1))
     p3 = Post(category='CNS', title='I hate anatomy', author=u3, body='bones?????',
               timestamp=now + timedelta(seconds=1))

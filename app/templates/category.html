@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <p>Here are posts by category:</p>
+    <h3>Here are posts by other users:</h3>
+    <br>
 
-{#        {% for post in posts %}#}
-{#            <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>#}
-{#        {% endfor %}#}
+        {% for post in posts %}
+            <div>
+                <h5>{{ post.author.username }} says:</h5>
+                <p><h4>{{ post.title }}</h4> {{ post.body }}
+                </p>
+                <small>{{ post.timestamp }}</small>
+            </div>
+            <br>
+            <br>
+        {% endfor %}
 {% endblock %}
 
 
