@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from flask import url_for
-from flask_login import login_manager, UserMixin, current_user
+from flask import url_for, render_template
+from flask_login import login_manager, UserMixin, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import redirect
 
-from app import db, login
+from app import db, login, app
 
 
 class User(UserMixin, db.Model):
@@ -42,3 +42,12 @@ class Post(db.Model):
         return '<Post {}>'.format(self.body)
 
 
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    return render_template('user.html', user=user, posts=posts)
