@@ -36,12 +36,12 @@
   </div>
 </div>
 
-    <h3>Here are posts by you and users you follow:</h3>
+    <h3>Explore posts made by our users:</h3>
     <br>
 
     {% for post in posts %}
-        {% include 'post.html' %}
-        {% endfor %}
+        {% include '_post.html' %}
+    {% endfor %}
     {% if prev_url %}
     <a href="{{ prev_url }}">Newer posts</a>
     {% endif %}

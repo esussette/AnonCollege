@@ -19,10 +19,12 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('home') }}">Home</a></li>
                     {% if current_user.is_anonymous %}
-                        <li><a href="{{ url_for('category') }}">Categories</a></li>
+                        <li><a href="{{ url_for('explore') }}">Explore</a></li>
                         <li><a href="{{ url_for('sendFeedback') }}">Feedback</a></li>
+                        <li><a href="{{ url_for('explore') }}">Explore</a></li>
                     {% else %}
-                        <li><a href="{{ url_for('category') }}">Categories</a></li>
+                        <li><a href="{{ url_for('explore') }}">Explore</a></li>
+                        <li><a href="{{ url_for('category') }}">Feed</a></li>
                         <li><a href="{{ url_for('createPost') }}">Post</a></li>
                         <li><a href="{{ url_for('sendFeedback') }}">Feedback</a></li>
                     {% endif %}

@@ -37,7 +37,7 @@ class NewPostForm(FlaskForm):
                                                    ('Current Events', 'Current Events'),
                                                    ('Campus Life', 'Campus Life')])
 
-    body = StringField('Description', validators=[DataRequired()])
+    body = TextAreaField('Say Something', validators=[DataRequired()])
     submit = SubmitField('Create New Post')
 
 
@@ -51,4 +51,8 @@ class FeedbackForm(FlaskForm):
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
+    submit = SubmitField('Submit')
+
+
+class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
