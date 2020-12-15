@@ -1,13 +1,12 @@
 from datetime import datetime, timedelta
 
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, g
 from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql.functions import random
 from werkzeug.urls import url_parse
 
-
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, NewPostForm, FeedbackForm
+from app.forms import LoginForm, RegistrationForm, NewPostForm, FeedbackForm, EditProfileForm
 from app.models import User, Post, Feedback
 
 
@@ -32,6 +31,7 @@ def academics():
     posts = Post.query.filter_by(category=Post.category).first()
     # posts = Post.query.filter_by(category='Academic')
     return render_template('academics.html', posts=posts)
+
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/campusevents', methods=['GET', 'POST'])
@@ -105,6 +105,7 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+
 @app.route('/user/<username>')
 @login_required
 def user(username):
@@ -116,21 +117,20 @@ def user(username):
     return render_template('user.html', user=user, posts=posts)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('edit'))
+    else:
+        form.username.data = current_user.username
+        form.about_me.data = current_user.about_me
+    return render_template('edit_profile.html', form=form)
 
 
 @app.route('/reset_db')
@@ -147,8 +147,11 @@ def reset_db():
     u1 = User(username='SiR123', email='johnredcorn@gmail.com', password_hash='johnredcorn')
     u2 = User(username='lostCtrl', email='ctrl@gmail.com', password_hash='youandme')
     u3 = User(username='cadillacdrmz', email='nodestination@gmail.com', password_hash='noexpectations')
+    u4 = User(username='angryspice', email='angry@gmail.com', password_hash='beautiful')
+    u5 = User(username='hearttoheart', email='baby@gmail.com', password_hash='please')
+    u6 = User(username='hello', email='nonono@gmail.com', password_hash='dontjudgeme')
 
-    db.session.add_all([u1, u2, u3])
+    db.session.add_all([u1, u2, u3, u4, u5, u6])
     db.session.commit()
 
     now = datetime.utcnow()
@@ -159,7 +162,14 @@ def reset_db():
               timestamp=now + timedelta(seconds=1))
     p3 = Post(category='CNS', title='I hate anatomy', author=u3, body='bones?????',
               timestamp=now + timedelta(seconds=1))
-    db.session.add_all([p1, p2, p3])
+    p4 = Post(category='Academics', title='Finals Week SOS', author=u4, body='this finals week is driving me crazy',
+              timestamp=now + timedelta(seconds=1))
+    p5 = Post(category='Academics', title='Winter Class', author=u5, body='does anyone have any winter courses recs??',
+              timestamp=now + timedelta(seconds=1))
+    p6 = Post(category='Academics', title='Spring 2020', author=u6, body='When does the next semester start does '
+                                                                         'anyone know',
+              timestamp=now + timedelta(seconds=1))
+    db.session.add_all([p1, p2, p3, p4, p5, p6])
     db.session.commit()
 
     # c2p1 = CategoryToPost(post=p1, category=p1.category)

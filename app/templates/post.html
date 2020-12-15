@@ -3,7 +3,8 @@
 
             <thead class="thead-light">
             <tr>
-                <th scope="col"> {{ post.author.username }}: {{ post.title }} </th>
+
+                <th scope="col"> <img src="{{ post.author.avatar(50) }}"><h4>{{ post.author.username }} says : {{ post.title }} </h4> </th>
 
             </tr>
             </thead>
