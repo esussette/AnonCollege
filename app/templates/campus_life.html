@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block app_content %}
 
 
@@ -36,50 +37,37 @@
   </div>
 </div>
 
-    <h3>Explore posts made by our users:</h3>
+
+    <h3>Here are posts by other users:</h3>
     <br>
 
-    {% for post in posts %}
-        {% include 'post.html' %}
-    {% endfor %}
-    {% if prev_url %}
-    <a href="{{ prev_url }}">Newer posts</a>
-    {% endif %}
-    {% if next_url %}
-    <a href="{{ next_url }}">Older posts</a>
-    {% endif %}
+        {% for post in posts %}
+            {% if post.category == 'Campus Life' %}
+            {% include 'post.html' %}
+            {% endif %}
+        {% endfor %}
+
+
+
+{#    {% for posts in Post.category.academics%}#}
+{#    <div>#}
+{#        <table class="table table-bordered">#}
+{##}
+{#            <thead class="thead-light">#}
+{#            <tr>#}
+{#                <th scope="col"> {{ post.author.username }}: {{ post.title }} </th>#}
+{##}
+{#            </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#            <tr>#}
+{#                 <td scope="row">{{ post.body }}#}
+{#                     <br>#}
+{#                     <br><small>Category: {{ post.category }} | {{ post.timestamp }}</small></td>#}
+{##}
+{#            </tr>#}
+{#            </tbody>#}
+{#            </table>#}
+{#    </div>#}
+{#        {% endfor %}#}
 {% endblock %}
-
-
-
-{#whats above is what i had on the 'topics' page - same thing, just the code #}
-{#underneath was giving me an error so I replaced it in the meanwhile#}
-
-
-
-
-
-
-
-
-{#{% extends "base.html" %}#}
-{##}
-{#{% block app_content %}#}
-{##}
-{#    <p>Welcome to Categories</p>#}
-{##}
-{#    {% for newPost in newPostForm %}#}
-{#        <p><a href="{{ url_for('artist', name=newPost.title) }}">{{ newPost.description }}</a></p>#}
-{#    {% endfor %}#}
-{##}
-{#    <ul class="thumbnails">#}
-{#        <li class="span4">#}
-{#            <div class="thumbnail">#}
-{#            <img src="https://placehold.it/300x200" alt="">#}
-{#            <h3>{{ newPostForm.title }}</h3>#}
-{#             <p>{{ newPostForm.description }}</p>#}
-{#            </div>#}
-{#        </li>#}
-{#    </ul>#}
-{##}
-{#{% endblock %}#}

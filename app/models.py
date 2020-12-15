@@ -1,6 +1,7 @@
 from datetime import datetime
 from hashlib import md5
 
+
 from flask import url_for, render_template
 from flask_login import login_manager, UserMixin, current_user, login_required
 from flask_sqlalchemy import Model
@@ -33,7 +34,7 @@ class User(UserMixin, db.Model):
     def followed_posts(self):
         followed = Post.query.join(
             followers, (followers.c.followed_id == Post.user_id)).filter(
-                followers.c.follower_id == self.id)
+            followers.c.follower_id == self.id)
         own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc())
 
@@ -76,7 +77,7 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-class Post(db.Model):
+class Post( db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(64))
     title = db.Column(db.String(64))
@@ -98,13 +99,9 @@ class Feedback(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Feedbacl {}>'.format(self.body)
+        return '<Feedback {}>'.format(self.body)
 
 
-class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64))
-    categories = Post.category.desc()
 
 # # *//*
 # class CategoryToPost(db.Model):

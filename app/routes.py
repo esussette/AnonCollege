@@ -21,10 +21,7 @@ def home():
 def category():
     from .models import Post
     posts = current_user.followed_posts().all()
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts().paginate(
-        page, app.config['POSTS_PER_PAGE'], False)
-    return render_template('category.html', posts=posts.items)
+    return render_template('category.html', posts=posts)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -32,37 +29,31 @@ def category():
 def explore():
     from .models import Post
     posts = Post.query.order_by(Post.timestamp.desc()).all()
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts().paginate(
-        page, app.config['POSTS_PER_PAGE'], False)
-    return render_template('category.html', posts=posts.items)
-    return render_template('explore.html', title='Explore', posts=posts)
-
+    return render_template('explore.html', posts=posts)
 
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/academics', methods=['GET', 'POST'])
 def academics():
     from .models import Post
-    posts = Post.query.filter_by(category=Post.category).first()
+    posts = Post.query.order_by(Post.category.desc()).all()
     # posts = Post.query.filter_by(category='Academic')
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts().paginate(
-        page, app.config['POSTS_PER_PAGE'], False)
-    return render_template('academics.html', posts=posts.items)
+    return render_template('academics.html', posts=posts)
 
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/campusevents', methods=['GET', 'POST'])
-def campusevents():
+@app.route('/current_events', methods=['GET', 'POST'])
+def current_events():
     from .models import Post
-    posts = Post.query.filter_by(category=Post.category).first()
-    # posts = Post.query.filter_by(category='Academic')
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts().paginate(
-        page, app.config['POSTS_PER_PAGE'], False)
+    posts = Post.query.order_by(Post.category.desc()).all()
+    return render_template('current_events.html', posts=posts)
 
-    return render_template('campusevents.html', posts=posts.items)
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/campus_life', methods=['GET', 'POST'])
+def campus_life():
+    from .models import Post
+    posts = Post.query.order_by(Post.category.desc()).all()
+    return render_template('campus_life.html', posts=posts)
 
 
 @app.route('/createPost', methods=['GET', 'POST'])
@@ -198,11 +189,10 @@ def unfollow(username):
         return redirect(url_for('index'))
 
 
+
+
 @app.route('/reset_db')
 def reset_db():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('reset_db'))
-    # clear all data from all tables
     meta = db.metadata
     for table in reversed(meta.sorted_tables):
         print('Clear table {}'.format(table))
@@ -222,12 +212,12 @@ def reset_db():
     now = datetime.utcnow()
     p1 = Post(category='Park', title='Park Sucks', author=u1, body='i hate this school, sos',
               timestamp=now + timedelta(seconds=1))
-    p2 = Post(category='CHS', title='Where is the bathroom', author=u2, body='ive walked around for half of class, '
+    p2 = Post(category='Campus Life', title='Where is the bathroom', author=u2, body='ive walked around for half of class, '
                                                                              'please help',
               timestamp=now + timedelta(seconds=1))
     p3 = Post(category='CNS', title='I hate anatomy', author=u3, body='bones?????',
               timestamp=now + timedelta(seconds=1))
-    p4 = Post(category='Academics', title='Finals Week SOS', author=u4, body='this finals week is driving me crazy',
+    p4 = Post(category='Current Events', title='Finals Week SOS', author=u4, body='this finals week is driving me crazy',
               timestamp=now + timedelta(seconds=1))
     p5 = Post(category='Academics', title='Winter Class', author=u5, body='does anyone have any winter courses recs??',
               timestamp=now + timedelta(seconds=1))
@@ -237,8 +227,6 @@ def reset_db():
     db.session.add_all([p1, p2, p3, p4, p5, p6])
     db.session.commit()
 
-    # c2p1 = CategoryToPost(post=p1, category=p1.category)
-    # db.session.add_all([c2p1])
-    # db.session.commit()
 
     return redirect(url_for('home'))
+
