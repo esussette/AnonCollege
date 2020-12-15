@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 
 from app.models import User, Post
@@ -32,7 +32,17 @@ class RegistrationForm(FlaskForm):
 
 
 class NewPostForm(FlaskForm):
-    title = StringField('title', validators=[DataRequired()])
-    category = StringField('category', validators=[DataRequired()])
-    body = StringField('description', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired()])
+    category = SelectField('Categories:', choices=[('Academics', 'Academics'),
+                                                   ('Current Events', 'Current Events'),
+                                                   ('Campus Life', 'Campus Life')])
+
+    body = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Create New Post')
+
+
+class FeedbackForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    body = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Create New Post')

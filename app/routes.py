@@ -5,9 +5,10 @@ from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql.functions import random
 from werkzeug.urls import url_parse
 
+
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, NewPostForm
-from app.models import User, Post
+from app.forms import LoginForm, RegistrationForm, NewPostForm, FeedbackForm
+from app.models import User, Post, Feedback
 
 
 @app.route('/')
@@ -21,14 +22,33 @@ def home():
 def category():
     from .models import Post
     posts = Post.query.order_by(Post.timestamp.desc())
-    # posts = Post.query.filter_by(category=Post.category).first()
     return render_template('category.html', posts=posts)
+
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/academics', methods=['GET', 'POST'])
+def academics():
+    from .models import Post
+    posts = Post.query.filter_by(category=Post.category).first()
+    # posts = Post.query.filter_by(category='Academic')
+    return render_template('academics.html', posts=posts)
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/campusevents', methods=['GET', 'POST'])
+def campusevents():
+    from .models import Post
+    posts = Post.query.filter_by(category=Post.category).first()
+    # posts = Post.query.filter_by(category='Academic')
+    return render_template('campusevents.html', posts=posts)
 
 
 @app.route('/createPost', methods=['GET', 'POST'])
 def createPost():
     form = NewPostForm()
-    if form.validate_on_submit():
+    if request.method == 'GET':
+        form.category.default = 'Academics'
+        form.process()
+    elif form.validate_on_submit():
         flash('New post for category {}'.format(form.category.data))
         my_post = Post(title=form.title.data, category=form.category.data, body=form.body.data, author=current_user)
         db.session.add(my_post)
@@ -36,6 +56,18 @@ def createPost():
         flash('Your post is now live!')
         return redirect(url_for('category'))
     return render_template('createPost.html', title='New post', form=form)
+
+
+@app.route('/sendFeedback', methods=['GET', 'POST'])
+def sendFeedback():
+    form = FeedbackForm()
+    if form.validate_on_submit():
+        flash('Feedback sent. Thank you for your submission!')
+        the_form = Feedback(name=form.name.data, email=form.email.data, body=form.body.data)
+        db.session.add(the_form)
+        db.session.commit()
+        return redirect(url_for('category'))
+    return render_template('feedback.html', title='New feedback form', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -73,28 +105,33 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-
-@app.route('/')
-@app.route("/quote")
-def random_quote():
-    quotes = [
-        "You are but a lonely grasshopper in a big field",
-        "Everyone has a plan, until they get punched.",
-        "You miss 100% of the shots you don't take."]
-    idx = random.randrange(len(quotes))
-    return render_template('login.html', q=quotes[idx])
-
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first()
+    posts = [
+        {'author': user, 'body': 'Test post #2'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    return render_template('user.html', user=user, posts=posts)
 
 
-# @app.route('/user/<username>')
-# @login_required
-# def user(username):
-#     user = User.query.filter_by(username=username).first_or_404()
-#     posts = [
-#         {'author': user, 'body': 'Test post #1'},
-#         {'author': user, 'body': 'Test post #2'}
-#     ]
-#     return render_template('user.html', user=user, posts=posts)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/reset_db')
 def reset_db():
@@ -125,5 +162,8 @@ def reset_db():
     db.session.add_all([p1, p2, p3])
     db.session.commit()
 
-    return redirect(url_for('home'))
+    # c2p1 = CategoryToPost(post=p1, category=p1.category)
+    # db.session.add_all([c2p1])
+    # db.session.commit()
 
+    return redirect(url_for('home'))

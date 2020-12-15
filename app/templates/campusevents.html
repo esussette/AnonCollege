@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block app_content %}
 
 
@@ -39,23 +40,10 @@
     <h3>Here are posts by other users:</h3>
     <br>
 
-    {% for post in posts %}
-        {% include 'post.html' %}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-{#        {% for post in posts %}#}
+{#        {% for i in category %}#}
 {#            <div>#}
 {#                <h5>{{ post.author.username }} says:</h5>#}
 {#                <p><h4>{{ post.title }}</h4> {{ post.body }}#}
@@ -64,39 +52,7 @@
 {#            </div>#}
 {#            <br>#}
 {#            <br>#}
-        {% endfor %}
+{#        {% endfor %}#}
+
+
 {% endblock %}
-
-
-
-{#whats above is what i had on the 'topics' page - same thing, just the code #}
-{#underneath was giving me an error so I replaced it in the meanwhile#}
-
-
-
-
-
-
-
-
-{#{% extends "base.html" %}#}
-{##}
-{#{% block app_content %}#}
-{##}
-{#    <p>Welcome to Categories</p>#}
-{##}
-{#    {% for newPost in newPostForm %}#}
-{#        <p><a href="{{ url_for('artist', name=newPost.title) }}">{{ newPost.description }}</a></p>#}
-{#    {% endfor %}#}
-{##}
-{#    <ul class="thumbnails">#}
-{#        <li class="span4">#}
-{#            <div class="thumbnail">#}
-{#            <img src="https://placehold.it/300x200" alt="">#}
-{#            <h3>{{ newPostForm.title }}</h3>#}
-{#             <p>{{ newPostForm.description }}</p>#}
-{#            </div>#}
-{#        </li>#}
-{#    </ul>#}
-{##}
-{#{% endblock %}#}

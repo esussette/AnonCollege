@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask import url_for, render_template
 from flask_login import login_manager, UserMixin, current_user, login_required
+from flask_sqlalchemy import Model
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import redirect
 
@@ -38,16 +39,37 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    # categories = db.relationship('CategoryToPost', backref='category', lazy='dynamic ')
+
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
 
-@app.route('/user/<username>')
-@login_required
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
-    return render_template('user.html', user=user, posts=posts)
+
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    email = db.Column(db.String(64))
+    body = db.Column(db.String(140))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+            return '<Feedbacl {}>'.format(self.body)
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
+    categories = Post.category.desc()
+
+
+
+# # *//*
+# class CategoryToPost(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+#     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+#
+#     post = db.relationship('Post', backref='category', lazy=True)
+#     category = db.relationship('Category', backref='post', lazy=True)
+# //

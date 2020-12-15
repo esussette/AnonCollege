@@ -1,0 +1,19 @@
+<div>
+        <table class="table table-bordered">
+
+            <thead class="thead-light">
+            <tr>
+                <th scope="col"> {{ post.author.username }}: {{ post.title }} </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                 <td scope="row">{{ post.body }}
+                     <br>
+                     <br><small>Category: {{ post.category }} | {{ post.timestamp }}</small></td>
+
+            </tr>
+            </tbody>
+            </table>
+    </div>
